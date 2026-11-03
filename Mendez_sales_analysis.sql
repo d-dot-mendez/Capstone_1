@@ -6,56 +6,75 @@ USE sample_sales;
 SELECT database(); 
 
 -- Total Revenues in Colorado and the Start and End Time
-SELECT SUM(SalesTotaL + Sale_Amount) AS Total_Revenue
+/*Based off the results from the first query, the start time would be 
+1/18/2022 and the end time would be 12/31/2025. 
+
+Based off the results from the second query, the total revenue is 455,304.72
+So from 1/18/2022 to 12/31/2025, Colorado has made $3,160,877.11 in total revenue. 
+*/
+SELECT
+    MIN(Date) AS Earliest_Order_Date,
+    MIN(Transaction_Date) AS Earliest_Transaction_Date,
+    MAX(Date) AS Latest_Order_Date,
+    MAX(Transaction_Date) AS Latest_Transaction_Date
 FROM online_sales o
-LEFT JOIN store_sales s
-	ON o.id = s.id
-WHERE Store_ID >= 701 AND Store_ID <= 718;
+JOIN store_sales s
+    ON o.id = s.id
+WHERE ShiptoState = 'Colorado'
+  AND Store_ID BETWEEN 701 AND 718;
 
--- Used ChatGPT for the UNION ALL syntax
-SELECT MONTHNAME(Date) AS Month,
-    YEAR(Date) AS Year,
-    SalesTotal
-FROM online_sales
-UNION ALL 
-SELECT 
-	MONTHNAME(Transaction_Date) AS Month,
-    YEAR(Transaction_Date) AS Year,
-	Sale_Amount
-FROM store_sales
-WHERE Store_ID >= 701 AND Store_ID <= 718
-GROUP BY Month, YEAR; 
-
-SELECT 
-	MIN(o.Date), 
-    MAX(o.Date),
-    MAX(s.Transaction_Date),
-    MIN(s.Transaction_Date)
+SELECT SUM(SalesTotal + Sale_Amount) AS Total_Revenue
 FROM online_sales o
-LEFT JOIN store_sales s
-	ON o.id = s.id
-WHERE Store_ID >= 701 AND Store_ID <= 718;
-/*
-Based off this results, Between January 1st, 2022 and 
-December 31st 2025, Colorado made a total of
-11,366,948.80 in Total_Revenue. */ 
+JOIN store_sales s
+    ON o.id = s.id
+WHERE ShiptoState = 'Colorado'; 
+	
+/* I needed chatgpt's help to create a union all syntax. This is what my query was
+looking like prior: 
 
--- Breakdown by Month, Year, and Total Revenue
-SELECT MONTHNAME(Date) AS Month,
-    YEAR(Date) AS Year,
-    SUM(SalesTotal) AS Total_Revenue
-FROM online_sales
-GROUP BY YEAR (DATE), MONTHNAME (DATE)
-UNION ALL 
-SELECT MONTHNAME(Transaction_Date) AS Month,
-    YEAR(Transaction_Date) AS Year,
-	SUM(Sale_Amount) AS Total_Revenue
-FROM store_sales
-WHERE Store_ID >= 701 AND Store_ID <= 718
-GROUP BY MONTHNAME(Transaction_Date), YEAR(Transaction_Date); 
+SELECT MONTHNAME(Date), YEAR(Date), MONTHNAME(Transaction_Date),
+YEAR(Transaction_Date),
+SUM(SalesTotal + Sale_Amount) AS Total_Revenue
+FROM online_sales o
+JOIN store_sales s
+    ON o.id = s.id
+WHERE ShiptoState = 'Colorado'
+  AND Store_ID BETWEEN 701 AND 718
+GROUP BY MONTHNAME(Date), MONTHNAME(Transaction_Date) ; */
+
+-- This shows the revenue breakdown by Month and Year
+SELECT
+    Month,
+    Year,
+    SUM(Revenue) AS Total_Revenue
+FROM (
+    SELECT
+        MONTHNAME(Date) AS Month,
+        YEAR(Date) AS Year,
+        SalesTotal AS Revenue
+    FROM online_sales
+    WHERE ShiptoState = 'Colorado'
+
+    UNION ALL
+
+    SELECT
+        MONTHNAME(Transaction_Date) AS Month,
+        YEAR(Transaction_Date) AS Year,
+        Sale_Amount AS Revenue
+    FROM store_sales
+    WHERE Store_ID BETWEEN 701 AND 718
+) AS SalesData
+GROUP BY Year, Month
+ORDER BY Year;
+
+
 
 -- Comapring Colorado's Total Revenue with other states
-
+/* I needed some help with chatgpt for the union help. This is what I had prior.
+SELECT SUM(SalesTotal), ShiptoState
+FROM online_sales
+GROUP BY ShiptoState;
+*/
 SELECT State,
        SUM(Revenue) AS Total_Revenue
 FROM
@@ -84,12 +103,39 @@ SELECT
 FROM online_sales o
 WHERE o.ShiptoState = 'Colorado'
 GROUP BY
-    MONTH(o.Date),
-    MONTHNAME(o.Date),
-    o.ProdNum
+    MONTHNAME(o.Date)
 ORDER BY
     MONTH(o.Date),
     o.ProdNum;
+
+/*This was my query to find the average product and by how much. I need AI's help
+with this question as well. 
+
+SELECT MONTHNAME(Transaction_Date), AVG(Sale_Amount), Prod_Num, Subcategory
+FROM store_sales 
+JOIN inventory_subcategories ON Prod_Num = Subcategoryid
+WHERE Store_ID BETWEEN 701 AND 718
+GROUP BY MONTHNAME(Transaction_Date)
+ */
+ -- The number of transactions per month, as well as 
+ -- the average transaction amount by product category
+SELECT
+    MONTHNAME(Transaction_Date) AS Month,
+    COUNT(id) AS Transaction_Count,
+    ROUND(AVG(Sale_Amount), 2) AS Avg_Transaction_Amount,
+    Subcategory
+FROM store_sales
+LEFT JOIN products p
+    ON Prod_Num = ProdNum
+JOIN inventory_subcategories i
+    ON p.Subcategoryid = i.Subcategoryid
+WHERE Store_ID BETWEEN 701 AND 718
+GROUP BY
+    MONTH(Transaction_Date),
+    MONTHNAME(Transaction_Date),
+    Subcategory;
+    
+    
     
 -- Ranking of in-store sales by each store in Colorado 
 SELECT StoreId, SUM(Sale_Amount) AS Total_Revenue
