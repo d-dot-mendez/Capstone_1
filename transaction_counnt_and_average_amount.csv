@@ -1,0 +1,68 @@
+Month,Category,Transaction_Count,Average_Transaction_Amount
+January,"Apparel and Merchandise",141,134.62
+January,"Art Supplies",118,137.33
+January,"Books (General)",96,132.33
+January,"Stationery and Supplies",154,45.61
+January,"Technology & Accessories",168,1716.63
+January,Textbooks,17,575.73
+February,"Apparel and Merchandise",30,146.83
+February,"Art Supplies",54,161.53
+February,"Books (General)",58,113.72
+February,"Stationery and Supplies",56,38.44
+February,"Technology & Accessories",59,1959.76
+February,Textbooks,40,728.19
+March,"Apparel and Merchandise",49,125.33
+March,"Art Supplies",39,126.74
+March,"Books (General)",49,132.47
+March,"Stationery and Supplies",40,34.59
+March,"Technology & Accessories",53,2298.43
+March,Textbooks,33,655.60
+April,"Apparel and Merchandise",44,199.44
+April,"Art Supplies",42,144.61
+April,"Books (General)",54,108.53
+April,"Stationery and Supplies",71,45.74
+April,"Technology & Accessories",56,2170.43
+April,Textbooks,27,897.23
+May,"Apparel and Merchandise",13,189.85
+May,"Art Supplies",9,147.81
+May,"Books (General)",22,104.17
+May,"Stationery and Supplies",12,62.73
+May,"Technology & Accessories",9,2506.84
+May,Textbooks,51,680.75
+June,"Apparel and Merchandise",90,114.60
+June,"Art Supplies",73,139.74
+June,"Books (General)",88,149.85
+June,"Stationery and Supplies",99,34.64
+June,"Technology & Accessories",119,1918.44
+June,Textbooks,20,795.96
+July,"Apparel and Merchandise",36,149.21
+July,"Art Supplies",31,100.44
+July,"Books (General)",30,111.05
+July,"Stationery and Supplies",39,53.10
+July,"Technology & Accessories",44,1402.71
+July,Textbooks,28,616.75
+August,"Apparel and Merchandise",44,170.73
+August,"Art Supplies",22,228.67
+August,"Books (General)",44,160.81
+August,"Stationery and Supplies",32,36.85
+August,"Technology & Accessories",46,2070.20
+August,Textbooks,32,753.75
+September,"Apparel and Merchandise",46,143.54
+September,"Art Supplies",50,123.17
+September,"Books (General)",33,185.48
+September,"Stationery and Supplies",46,54.10
+September,"Technology & Accessories",48,1580.93
+September,Textbooks,23,820.94
+October,Textbooks,13,989.16
+November,"Apparel and Merchandise",75,129.90
+November,"Art Supplies",71,161.25
+November,"Books (General)",69,109.99
+November,"Stationery and Supplies",104,49.88
+November,"Technology & Accessories",100,2336.00
+November,Textbooks,21,716.80
+December,"Apparel and Merchandise",186,141.29
+December,"Art Supplies",193,136.78
+December,"Books (General)",151,122.40
+December,"Stationery and Supplies",219,45.49
+December,"Technology & Accessories",263,2340.43
+December,Textbooks,31,641.97

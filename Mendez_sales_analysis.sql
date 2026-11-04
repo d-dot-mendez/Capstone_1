@@ -50,22 +50,22 @@ SELECT
 FROM (
     SELECT
         MONTHNAME(Date) AS Month,
+        MONTH(Date) AS MonthNum,
         YEAR(Date) AS Year,
         SalesTotal AS Revenue
     FROM online_sales
     WHERE ShiptoState = 'Colorado'
-
     UNION ALL
-
     SELECT
         MONTHNAME(Transaction_Date) AS Month,
+        MONTH(Transaction_Date) AS MonthNum,
         YEAR(Transaction_Date) AS Year,
         Sale_Amount AS Revenue
     FROM store_sales
     WHERE Store_ID BETWEEN 701 AND 718
 ) AS SalesData
-GROUP BY Year, Month
-ORDER BY Year;
+GROUP BY Year, MonthNum, Month
+ORDER BY Year, MonthNum;
 
 
 
@@ -97,17 +97,23 @@ ORDER BY Total_Revenue DESC;
 -- Number of Transactions per Month by product category
 SELECT
     MONTHNAME(o.Date) AS Month,
-    o.ProdNum AS Product_Category,
+    Category,
     COUNT(*) AS Transaction_Count,
-    AVG(o.SalesTotal) AS Average_Transaction_Amount
+    ROUND(AVG(o.SalesTotal), 2) AS Average_Transaction_Amount
 FROM online_sales o
+JOIN products p
+    ON p.ProdNum = o.ProdNum
+JOIN inventory_categories i
+    ON i.CategoryID = p.CategoryID
 WHERE o.ShiptoState = 'Colorado'
 GROUP BY
-    MONTHNAME(o.Date)
+    MONTH(o.Date),
+    MONTHNAME(o.Date),
+    Category
 ORDER BY
     MONTH(o.Date),
-    o.ProdNum;
-
+    Category;
+    
 /*This was my query to find the average product and by how much. I need AI's help
 with this question as well. 
 
@@ -134,7 +140,6 @@ GROUP BY
     MONTH(Transaction_Date),
     MONTHNAME(Transaction_Date),
     Subcategory;
-    
     
     
 -- Ranking of in-store sales by each store in Colorado 
